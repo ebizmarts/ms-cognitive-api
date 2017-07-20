@@ -33,6 +33,6 @@ class DeletePersonGroupCommand extends Command
         $manager = new FaceApiManager();
         $manager->deletePersonGroup($input->getArgument('id'));
 
-        $output->writeln("Group delete successfully.");
+        $output->writeln("<info>Group delete successfully.</info>");
     }
 }
