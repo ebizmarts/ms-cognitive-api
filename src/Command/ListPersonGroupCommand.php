@@ -32,7 +32,7 @@ class ListPersonGroupCommand extends Command
         foreach ($groups as $group) {
             /** @var $group \Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup */
             $output->writeln([
-                'ID: ' . $group->getPersonGroupId(),
+                'ID: <comment>' . $group->getPersonGroupId() . '</comment>',
                 'Name: ' . $group->getName(),
                 'User data: ' . $group->getUserData(),
                 ''
