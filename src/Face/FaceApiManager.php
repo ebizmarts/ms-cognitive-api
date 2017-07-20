@@ -33,6 +33,8 @@ class FaceApiManager
     }
 
     /**
+     * List person groups and their information.
+     *
      * @return array \Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup
      */
     public function getAllPersonGroups()
@@ -45,6 +47,12 @@ class FaceApiManager
         return $personGroup->getAllGroups($groups);
     }
 
+    /**
+     * Create a new person group with specified personGroupId, name and user-provided userData.
+     *
+     * @param Data\V1_0\PersonGroup $personGroupData
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function createPersonGroup(\Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup $personGroupData)
     {
         $body = [
@@ -62,6 +70,8 @@ class FaceApiManager
     }
 
     /**
+     * Delete an existing person group. Persisted face images of all people in the person group will also be deleted.
+     *
      * @param string $id
      * @return \Psr\Http\Message\ResponseInterface
      */
@@ -78,6 +88,12 @@ class FaceApiManager
         return $result;
     }
 
+    /**
+     * Queue a person group training task, the training task may not be started immediately.
+     *
+     * @param string $id
+     * @return \Psr\Http\Message\ResponseInterface
+     */
     public function trainPersonGroup($id)
     {
         $body = [
@@ -92,6 +108,9 @@ class FaceApiManager
     }
 
     /**
+     * Create a new person in a specified person group. A newly created person have no registered face,
+     * you can call Person - Add a Person Face API to add faces to the person.
+     *
      * @param Person $person
      * @param $personGroupId
      * @return Person
@@ -111,6 +130,13 @@ class FaceApiManager
         return new Person(['personId' => $createdPersonId]);
     }
 
+    /**
+     * List all persons in a person group, and retrieve person information
+     * (including personId, name, userData and persistedFaceIds of registered faces of the person).
+     *
+     * @param string $personGroupId
+     * @return array
+     */
     public function getAllPersonsForPersonGroup($personGroupId)
     {
         $response = $this->httpClient->request('GET', "persongroups/$personGroupId/persons");
@@ -131,6 +157,35 @@ class FaceApiManager
         }
 
         return $return;
+    }
+
+    /**
+     * Add a representative face to a person for identification.
+     * The input face is specified as an image with a targetFace rectangle.
+     * It returns a persistedFaceId representing the added face and this persistedFaceId will not expire.
+     * Note persistedFaceId is different from faceId which represents the detected face by Face - Detect.
+     *
+     */
+    public function addFace()
+    {
+
+    }
+
+    /**
+     * Detect human faces in an image and returns face locations, and optionally with faceIds, landmarks, and attributes.
+     */
+    public function detectFace()
+    {
+
+    }
+
+    /**
+     * Verify whether two faces belong to a same person or whether one face belongs to a person.
+     *
+     */
+    public function verifyFace()
+    {
+
     }
 
 }
