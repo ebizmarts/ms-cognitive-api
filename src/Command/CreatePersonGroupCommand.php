@@ -2,6 +2,8 @@
 
 namespace Ebizmarts\MsCognitiveService\Command;
 
+use Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup;
+use Ebizmarts\MsCognitiveService\Face\FaceApiManager;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,8 +31,20 @@ class CreatePersonGroupCommand extends Command
             '',
         ]);
 
-        $output->writeln('ID: '.$input->getArgument('id'));
-        $output->writeln('NAME: '.$input->getArgument('name'));
-        $output->writeln('USER DATA: '.$input->getArgument('user-data'));
+        $output->writeln("Creating Person Group...");
+        $output->writeln("ID: " . $input->getArgument('id'));
+        $output->writeln("Name: " . $input->getArgument('name'));
+        $output->writeln("User data: " . $input->getArgument('user-data'));
+
+        $manager = new FaceApiManager();
+
+        $personGroup = new PersonGroup();
+        $personGroup->setPersonGroupId($input->getArgument('id'));
+        $personGroup->setName($input->getArgument('name'));
+        $personGroup->setUserData($input->getArgument('user-data'));
+
+        $manager->createPersonGroup($personGroup);
+
+        $output->writeln("Group created successfully.");
     }
 }

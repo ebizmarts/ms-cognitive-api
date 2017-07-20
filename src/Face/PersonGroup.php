@@ -2,6 +2,7 @@
 
 namespace Ebizmarts\MsCognitiveService\Face;
 
+use Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup as PersonGroupData;
 use GuzzleHttp\Client;
 
 class PersonGroup
@@ -39,7 +40,7 @@ class PersonGroup
 
         foreach($groups as $model)
         {
-            $return []= new \Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup(
+            $return []= new PersonGroupData(
                 [
                     'personGroupId' => $model->personGroupId,
                     'name' => $model->name,
@@ -49,5 +50,21 @@ class PersonGroup
         }
 
         return $return;
+    }
+
+    public function create(PersonGroupData $personGroup)
+    {
+        $body = [
+            'json' => [
+                'name' => $personGroup->getName(),
+                'userData' => $personGroup->getUserData()
+            ]
+        ];
+
+        $putUri = 'persongroups/' . $personGroup->getPersonGroupId();
+
+        $result = $this->httpClient->put($putUri, $body);
+
+        return $result;
     }
 }
