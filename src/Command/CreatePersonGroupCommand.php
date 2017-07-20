@@ -45,6 +45,6 @@ class CreatePersonGroupCommand extends Command
 
         $manager->createPersonGroup($personGroup);
 
-        $output->writeln("Group created successfully.");
+        $output->writeln("<info>Group created successfully.</info>");
     }
 }
