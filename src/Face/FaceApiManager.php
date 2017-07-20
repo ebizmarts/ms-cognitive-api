@@ -20,4 +20,13 @@ class FaceApiManager
         return $personGroup->getAllGroups();
     }
 
+    public function createPersonGroup(\Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup $personGroupData)
+    {
+        $personGroup = new PersonGroup($this->apiKey, $this->baseUri);
+
+        $result = $personGroup->create($personGroupData);
+
+        return $result;
+    }
+
 }
