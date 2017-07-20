@@ -2,6 +2,7 @@
 
 namespace Ebizmarts\MsCognitiveService\Face;
 
+use Ebizmarts\MsCognitiveService\Exception;
 use Ebizmarts\MsCognitiveService\Face\Data\V1_0\Person;
 use GuzzleHttp\Client;
 
@@ -21,15 +22,7 @@ class FaceApiManager
      */
     public function __construct()
     {
-        $this->httpClient = new Client(
-            [
-                "base_uri" => $this->baseUri,
-                "headers"  => [
-                    "Ocp-Apim-Subscription-Key" => $this->apiKey,
-                    "Content-Type" => "application/json; charset=utf-8"
-                ]
-            ]
-        );
+        $this->httpClient = $this->makeHttpClient();
     }
 
     /**
@@ -166,9 +159,19 @@ class FaceApiManager
      * Note persistedFaceId is different from faceId which represents the detected face by Face - Detect.
      *
      */
-    public function addFace()
+    public function addFace($personGroupId, $personId, $fileContents)
     {
+        if (strlen($fileContents) > 4000000) {
+            throw new Exception("File is too large.");
+        }
 
+        $postUrl = "persongroups/$personGroupId/persons/$personId/persistedFaces";
+
+        $client = $this->makeHttpClient("application/octet-stream");
+
+        $result = $client->request("POST", $postUrl, ['body' => $fileContents]);
+
+        return $result->getStatusCode();
     }
 
     /**
@@ -180,12 +183,30 @@ class FaceApiManager
     }
 
     /**
-     * Verify whether two faces belong to a same person or whether one face belongs to a person.
+     * For each face in the faceIds array, Face Identify will compute similarities between
+     * the query face and all the faces in the person group (given by personGroupId),
+     * and returns candidate person(s) for that face ranked by similarity confidence.
+     * The person group should be trained to make it ready for identification.
+     * See more in Person Group - Train Person Group.
      *
      */
-    public function verifyFace()
+    public function identifyFace()
     {
 
+    }
+
+    /**
+     * @return Client
+     */
+    private function makeHttpClient($contentType = "application/json; charset=utf-8")
+    {
+        return new Client([
+                "base_uri" => $this->baseUri,
+                "headers"  => [
+                    "Ocp-Apim-Subscription-Key" => $this->apiKey,
+                    "Content-Type"              => $contentType
+                ]
+            ]);
     }
 
 }
