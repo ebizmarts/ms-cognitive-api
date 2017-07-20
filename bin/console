@@ -12,5 +12,7 @@ $application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonGroupCom
 $application->add(new \Ebizmarts\MsCognitiveService\Command\ListPersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\DeletePersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\TrainPersonGroupCommand());
+$application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonCommand());
+$application->add(new \Ebizmarts\MsCognitiveService\Command\ListPersonCommand());
 
 $application->run();
