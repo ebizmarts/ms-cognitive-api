@@ -2,6 +2,7 @@
 
 namespace Ebizmarts\MsCognitiveService\Face;
 
+use Ebizmarts\MsCognitiveService\Face\Data\V1_0\Person;
 use GuzzleHttp\Client;
 
 class FaceApiManager
@@ -88,6 +89,48 @@ class FaceApiManager
         $result = $this->httpClient->post("persongroups/$id/train", $body);
 
         return $result;
+    }
+
+    /**
+     * @param Person $person
+     * @param $personGroupId
+     * @return Person
+     */
+    public function createPerson(Person $person, $personGroupId)
+    {
+        $body = [
+            'json' => [
+                'name' => $person->getName()
+            ]
+        ];
+
+        $result = $this->httpClient->post("persongroups/$personGroupId/persons", $body);
+        $contents = $result->getBody()->getContents();
+        $createdPersonId = \GuzzleHttp\json_decode($contents)->personId;
+
+        return new Person(['personId' => $createdPersonId]);
+    }
+
+    public function getAllPersonsForPersonGroup($personGroupId)
+    {
+        $response = $this->httpClient->request('GET', "persongroups/$personGroupId/persons");
+        $contents = $response->getBody()->getContents();
+        $persons = \GuzzleHttp\json_decode($contents);
+
+        $return = [];
+
+        foreach($persons as $person)
+        {
+            $newPerson = new Person();
+            $newPerson->setName($person->name);
+            $newPerson->setPersonId($person->personId);
+            $newPerson->setUserData($person->userData);
+            $newPerson->setPersistedFaceIds($person->persistedFaceIds);
+
+            $return []= $newPerson;
+        }
+
+        return $return;
     }
 
 }
