@@ -14,5 +14,6 @@ $application->add(new \Ebizmarts\MsCognitiveService\Command\DeletePersonGroupCom
 $application->add(new \Ebizmarts\MsCognitiveService\Command\TrainPersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\ListPersonCommand());
+$application->add(new \Ebizmarts\MsCognitiveService\Command\PersonAddFaceCommand());
 
 $application->run();
