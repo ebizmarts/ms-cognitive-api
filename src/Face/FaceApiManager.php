@@ -2,6 +2,8 @@
 
 namespace Ebizmarts\MsCognitiveService\Face;
 
+use GuzzleHttp\Client;
+
 class FaceApiManager
 {
     /** @var string */
@@ -10,21 +12,67 @@ class FaceApiManager
     /** @var string */
     private $baseUri = "https://westus.api.cognitive.microsoft.com/face/v1.0/";
 
+    /** @var Client */
+    private $httpClient;
+
+    /**
+     * FaceApiManager constructor.
+     */
+    public function __construct()
+    {
+        $this->httpClient = new Client(
+            [
+                "base_uri" => $this->baseUri,
+                "headers"  => [
+                    "Ocp-Apim-Subscription-Key" => $this->apiKey,
+                    "Content-Type" => "application/json; charset=utf-8"
+                ]
+            ]
+        );
+    }
+
     /**
      * @return array \Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup
      */
     public function getAllPersonGroups()
     {
-        $personGroup = new PersonGroup($this->apiKey, $this->baseUri);
+        $response = $this->httpClient->request('GET', 'persongroups');
+        $contents = $response->getBody()->getContents();
+        $groups = \GuzzleHttp\json_decode($contents);
 
-        return $personGroup->getAllGroups();
+        $personGroup = new PersonGroup();
+        return $personGroup->getAllGroups($groups);
     }
 
     public function createPersonGroup(\Ebizmarts\MsCognitiveService\Face\Data\V1_0\PersonGroup $personGroupData)
     {
-        $personGroup = new PersonGroup($this->apiKey, $this->baseUri);
+        $body = [
+            'json' => [
+                'name' => $personGroupData->getName(),
+                'userData' => $personGroupData->getUserData()
+            ]
+        ];
 
-        $result = $personGroup->create($personGroupData);
+        $putUri = 'persongroups/' . $personGroupData->getPersonGroupId();
+
+        $result = $this->httpClient->put($putUri, $body);
+
+        return $result;
+    }
+
+    /**
+     * @param string $id
+     * @return \Psr\Http\Message\ResponseInterface
+     */
+    public function deletePersonGroup($id)
+    {
+        $body = [
+            'json' => [
+                'personGroupId' => $id
+            ]
+        ];
+
+        $result = $this->httpClient->delete("persongroups/$id", $body);
 
         return $result;
     }
