@@ -77,4 +77,17 @@ class FaceApiManager
         return $result;
     }
 
+    public function trainPersonGroup($id)
+    {
+        $body = [
+            'json' => [
+                'personGroupId' => $id
+            ]
+        ];
+
+        $result = $this->httpClient->post("persongroups/$id/train", $body);
+
+        return $result;
+    }
+
 }
