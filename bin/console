@@ -10,6 +10,7 @@ $application = new Application();
 
 $application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\ListPersonGroupCommand());
+$application->add(new \Ebizmarts\MsCognitiveService\Command\GetPersonCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\DeletePersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\TrainPersonGroupCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonCommand());
