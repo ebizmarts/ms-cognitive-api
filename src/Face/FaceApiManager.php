@@ -214,10 +214,12 @@ class FaceApiManager
         ];
 
         $result = $this->httpClient->request("POST", "identify", $body);
+        $contents = $result->getBody()->getContents();
+        $persons = \GuzzleHttp\json_decode($contents);
 
         if ($result->getStatusCode() == 200) {
-            foreach ($result as $face) {
-                foreach ($face->candidates as $candidate) {
+            foreach ($persons as $person) {
+                foreach ($person->candidates as $candidate) {
                     return $candidate->personId;
                 }
             }
