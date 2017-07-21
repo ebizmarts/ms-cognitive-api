@@ -15,5 +15,6 @@ $application->add(new \Ebizmarts\MsCognitiveService\Command\TrainPersonGroupComm
 $application->add(new \Ebizmarts\MsCognitiveService\Command\CreatePersonCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\ListPersonCommand());
 $application->add(new \Ebizmarts\MsCognitiveService\Command\PersonAddFaceCommand());
+$application->add(new \Ebizmarts\MsCognitiveService\Command\PersonDetectFaceCommand());
 
 $application->run();
