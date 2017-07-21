@@ -177,9 +177,23 @@ class FaceApiManager
     /**
      * Detect human faces in an image and returns face locations, and optionally with faceIds, landmarks, and attributes.
      */
-    public function detectFace()
+    public function detectFace($fileContents)
     {
+        if (strlen($fileContents) > 4000000) {
+            throw new Exception("File is too large.");
+        }
 
+        $client = $this->makeHttpClient("application/octet-stream");
+        $result = $client->request("POST", "detect/?returnFaceId=true", ['body' => $fileContents]);
+        $contents = $result->getBody()->getContents();
+        $faces = \GuzzleHttp\json_decode($contents);
+        if ($result->getStatusCode() == 200) {
+            foreach ($faces as $face) {
+                return $face->faceId;
+            }
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -190,9 +204,26 @@ class FaceApiManager
      * See more in Person Group - Train Person Group.
      *
      */
-    public function identifyFace()
+    public function identifyFace($personGroupId, $faceId)
     {
+        $body = [
+            'json' => [
+                'personGroupId' => $personGroupId,
+                'faceIds' => [$faceId]
+            ]
+        ];
 
+        $result = $this->httpClient->request("POST", "identify", $body);
+
+        if ($result->getStatusCode() == 200) {
+            foreach ($result as $face) {
+                foreach ($face->candidates as $candidate) {
+                    return $candidate->personId;
+                }
+            }
+        } else {
+            return "";
+        }
     }
 
     /**
