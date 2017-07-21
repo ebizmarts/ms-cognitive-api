@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class PersonAddFaceCommand extends Command
+class PersonDetectFaceCommand extends Command
 {
     protected function configure()
     {
@@ -33,6 +33,12 @@ class PersonAddFaceCommand extends Command
 
         $fileContents = file_get_contents($filePath);
 
-        $output->writeln($manager->detectFace($fileContents));
+        $faceId = $manager->detectFace($fileContents);
+
+        if (empty($faceId)) {
+            $output->writeln("<error>No face detected.</error>");
+        } else {
+            $output->writeln("Detected face id: <info>$faceId</info>");
+        }
     }
 }
