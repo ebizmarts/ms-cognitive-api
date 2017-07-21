@@ -153,6 +153,29 @@ class FaceApiManager
     }
 
     /**
+     * @param $personGroupId
+     * @param $personId
+     * @return Person
+     */
+    public function getPerson($personGroupId, $personId)
+    {
+        $response = $this->httpClient->request('GET', "persongroups/$personGroupId/persons/$personId");
+        $contents = $response->getBody()->getContents();
+        $personResult = \GuzzleHttp\json_decode($contents);
+
+        $person = new Person();
+
+        if ($response->getStatusCode() == 200) {
+            $person->setName($personResult->name);
+            $person->setUserData($personResult->userData);
+            $person->setPersonId($personResult->personId);
+            $person->setPersistedFaceIds($personResult->persistedFaceIds);
+        }
+
+        return $person;
+    }
+
+    /**
      * Add a representative face to a person for identification.
      * The input face is specified as an image with a targetFace rectangle.
      * It returns a persistedFaceId representing the added face and this persistedFaceId will not expire.
