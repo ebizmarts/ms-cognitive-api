@@ -2,7 +2,7 @@
 
 require_once "vendor/autoload.php";
 
-$accountKey = "***REMOVED***";
+$accountKey = "";
 $baseUri    = "https://westus.api.cognitive.microsoft.com/recommendations/v4.0/";
 
 $class = new \Ebizmarts\MsCognitiveService\Recommendation($accountKey, $baseUri);
