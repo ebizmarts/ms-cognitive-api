@@ -9,7 +9,7 @@ use GuzzleHttp\Client;
 class FaceApiManager
 {
     /** @var string */
-    private $apiKey = "44eb2ad6c05e49b7bdd0401efde9b8de";
+    private $apiKey = "";
 
     /** @var string */
     private $baseUri = "https://westus.api.cognitive.microsoft.com/face/v1.0/";
